@@ -11,14 +11,40 @@
           <label for="duration">Study Duration (minutes):</label>
           <input type="number" id="duration" v-model.number="duration" class="form-control" min="1" required="">
         </div>
+        <!-- Checklist Input -->
+        <div class="form-group">
+          <label for="task">Add Task to Checklist:</label>
+          <input type="text" id="task" v-model="newTask" @keyup.enter="addTask" class="form-control" placeholder="Enter task and press Enter">
+        </div>
+
         <button type="submit" class="btn btn-primary">Let's Study</button>
       </form>
+
+      <!-- Initial Checklist Display -->
+      <div v-if="tasks.length > 0">
+        <h3>Checklist:</h3>
+        <ul>
+          <li v-for="(task, index) in tasks" :key="index" @click="toggleTask(index)" :class="{ completed: task.completed }">
+            {{ task.text }}
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div v-else="">
       <h1>Studying: {{ subject }}</h1>
       <div class="timer">
         {{ formatTime(remainingTime) }}
+      </div>
+
+      <!-- Checklist Display during study session -->
+      <div v-if="tasks.length > 0">
+        <h3>Checklist:</h3>
+        <ul>
+          <li v-for="(task, index) in tasks" :key="index" @click="toggleTask(index)" :class="{ completed: task.completed }">
+            {{ task.text }}
+          </li>
+        </ul>
       </div>
     </div>
   </div>
@@ -35,6 +61,10 @@ export default {
     const remainingTime = ref(0);
     let timerInterval = null;
 
+    // Checklist Data
+    const tasks = ref([]);
+    const newTask = ref('');
+
     const startStudying = () => {
       isStudying.value = true;
       remainingTime.value = duration.value * 60; // Convert minutes to seconds
@@ -47,7 +77,7 @@ export default {
           remainingTime.value--;
         } else {
           stopTimer();
-          alert("Time's up!"); // Or you can trigger another event here.
+          alert('Time is up!'); 
           resetStudySession();
         }
       }, 1000);
@@ -70,6 +100,18 @@ export default {
       return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
     };
 
+    // Checklist Functionality
+    const addTask = () => {
+      if (newTask.value.trim() !== '') {
+        tasks.value.push({ text: newTask.value.trim(), completed: false });
+        newTask.value = '';
+      }
+    };
+
+    const toggleTask = (index) => {
+      tasks.value[index].completed = !tasks.value[index].completed;
+    };
+
     onUnmounted(() => {
       stopTimer(); // Clear interval when component unmounts.
     });
@@ -83,6 +125,10 @@ export default {
       startStudying,
       formatTime,
       resetStudySession,
+      tasks, //Expose tasks
+      newTask, // Expose newTask
+      addTask, // Expose addTask method
+      toggleTask, //Expose toggleTask
 
     };
   }
@@ -109,8 +155,8 @@ label {
   font-weight: bold;
 }
 
-input[type="text"],
-input[type="number"] {
+input[type='text'],
+input[type='number'] {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
@@ -139,5 +185,29 @@ input[type="number"] {
 .timer {
   font-size: 2em;
   margin-top: 20px;
+}
+
+/* Checklist styles */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 8px 12px;
+  margin-bottom: 5px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+}
+
+li:hover {
+  background-color: #e0e0e0;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #888;
 }
 </style>
