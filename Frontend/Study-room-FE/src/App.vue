@@ -14,7 +14,7 @@
         <!-- Checklist Input -->
         <div class="form-group">
           <label for="task">Add Task to Checklist:</label>
-          <input type="text" id="task" v-model="newTask" @keyup.enter="addTask" class="form-control" placeholder="Enter task and press Enter">
+          <input type="text" id="task" v-model="newTask" @keydown.enter.prevent="addTask" class="form-control" placeholder="Enter task and press Enter">
         </div>
 
         <button type="submit" class="btn btn-primary">Let's Study</button>
@@ -66,6 +66,10 @@ export default {
     const newTask = ref('');
 
     const startStudying = () => {
+      if (subject.value.trim() === '' || duration.value <= 0) {
+        alert("Please enter a subject and a valid duration.");
+        return;
+      }
       isStudying.value = true;
       remainingTime.value = duration.value * 60; // Convert minutes to seconds
       startTimer();
@@ -77,7 +81,7 @@ export default {
           remainingTime.value--;
         } else {
           stopTimer();
-          alert('Time is up!'); 
+          alert('Time is up!');
           resetStudySession();
         }
       }, 1000);
@@ -92,6 +96,7 @@ export default {
       isStudying.value = false;
       subject.value = '';
       duration.value = 25; // Reset to default.
+      remainingTime.value = 0; // Reset the timer to 0 when study ends.
     };
 
     const formatTime = (seconds) => {
@@ -109,6 +114,7 @@ export default {
     };
 
     const toggleTask = (index) => {
+      //Corrected this line to directly toggle completed state.
       tasks.value[index].completed = !tasks.value[index].completed;
     };
 
@@ -200,6 +206,7 @@ li {
   border-radius: 4px;
   cursor: pointer;
   text-align: left;
+  color: black;
 }
 
 li:hover {
