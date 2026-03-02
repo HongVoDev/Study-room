@@ -316,7 +316,6 @@ li:hover {
 }
 
 .left-pane {
-  border-right: none; /*Remove border between panes*/
 }
 
 .right-pane {
