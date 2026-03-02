@@ -4,3 +4,6 @@ Demo:
 ![Quick demo gif](Demo.gif)
 
 
+Future tasks demo:
+![Quick demo gif](futureTasksDemo.gif)
+
