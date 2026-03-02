@@ -28,7 +28,7 @@
               @keydown.enter.prevent="addTask"
               class="form-control"
               placeholder="Enter task and press Enter"
-            />
+            >
           </div>
 
           <button type="submit" class="btn btn-primary">Let's Study</button>
@@ -43,9 +43,9 @@
               :key="index"
               @click="toggleTask(index)"
               :class="{ completed: task.completed }"
-            ></li>
+            >
               {{ task.text }}
-            
+            </li>
           </ul>
         </div>
       </div>
@@ -64,9 +64,9 @@
               :key="index"
               @click="toggleTask(index)"
               :class="{ completed: task.completed }"
-            ></li>
+            >
               {{ task.text }}
-            
+            </li>
           </ul>
         </div>
       </div>
